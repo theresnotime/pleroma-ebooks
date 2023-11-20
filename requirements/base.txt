@@ -1,6 +1,6 @@
 beautifulsoup4 ~= 4.9
 pleroma.py ~= 0.0.1
-aiohttp ~= 3.0
+aiohttp ~= 3.9
 json5 ~= 0.9.5
 anyio ~= 3.0
 aiosqlite ~= 0.17.0
