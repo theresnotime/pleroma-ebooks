@@ -74,8 +74,11 @@ class PostFetcher:
 		await self._fedi.verify_credentials()
 		self._completed_accounts = {}
 		async with anyio.create_task_group() as tg:
-			for fqn in map(self.fqn, await self._fedi.following()):
-				tg.start_soon(self._do_account, fqn)
+			# for fqn in map(self.fqn, await self._fedi.following()):
+			#tg.start_soon(self._do_account, 'theresnotime@tech.lgbt')
+			tg.start_soon(self._do_account, 'theresnotime@labyrinth.zone')
+			tg.start_soon(self._do_account, 'theresnotime@wikis.world')
+			tg.start_soon(self._do_account, 'theresnotime@fox.nexus')
 
 	def fqn(self, acc: dict):
 		try:
@@ -193,7 +196,8 @@ class PostFetcher:
 		# 2) WebFinger is always located at the same location anyway
 
 		profile_url = await self._finger_actor(username, instance)
-
+		print(profile_url)
+		"""
 		try:
 			async with self._http.get(profile_url) as resp: profile = await resp.json()
 		except aiohttp.ContentTypeError:
@@ -201,10 +205,13 @@ class PostFetcher:
 			outbox_url = profile_url + '/outbox'
 		else:
 			outbox_url = profile['outbox']
-
-		async with self._http.get(outbox_url) as resp: outbox = await resp.json()
-		assert outbox['type'] == 'OrderedCollection'
-		return outbox
+		"""
+		outbox_url = profile_url + '/outbox'
+		print(outbox_url)
+		async with self._http.get(outbox_url) as resp:
+			outbox = await resp.json()
+			assert outbox['type'] == 'OrderedCollection'
+			return outbox
 
 	async def _finger_actor(self, username, instance):
 		# despite HTTP being a direct violation of the WebFinger spec, assume e.g. Tor instances do not support
